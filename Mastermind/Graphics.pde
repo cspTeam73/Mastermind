@@ -26,8 +26,6 @@ void pregame() {
 
       background(0);
       //createBoard();       //placeholder for our actual board
-
-      //isGameLive = true;   //placeholder for game pause!
     }
     /*else if (modeSelect == 0) {
      fill(random(0, 255), random(0, 255), random(0, 255), random(0, 255));
