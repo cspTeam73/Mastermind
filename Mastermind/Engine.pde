@@ -1,4 +1,4 @@
-/*
+ /*
   
   guesses will be handled by a 2D array
   
@@ -8,25 +8,57 @@
   
 */
 
+//
+//Variables
+//
+
 int[][] Guesses;
 int currentLayer;
 
 int[] Code;
 
+//Pegs
+int WPegs;
+int RPegs;
+
+//win/lose
+boolean Win;
+boolean Lose;
+
+//
+//Game logic
+//
+
+
+/*
+  Function: StartNewGame
+  Initializes all game variables and then handles game logic.
+*/
 void StartNewGame()
 {
   InitGameVariables();
   
 }
 
+/*
+  Function: InitGameVariables
+  Initializes all game variables.
+*/
 void InitGameVariables()
 {
   Guesses = new int[13][4];
   currentLayer = 0;
   
   Code = CreateCode();
+  
+  Win = false;
+  Lose = false;
 }
 
+/*
+  function: CreateCode
+  Returns an array of 4 random integers between 0 and 5
+*/
 int[] CreateCode()
 {
   int[] r = new int[4];
@@ -41,7 +73,9 @@ int[] CreateCode()
 
 /*
   function: CheckGuess
-  checks the guess in the current layer of Guesses and then increments the currentLayer
+  checks the guess in the current layer of Guesses
+  increments the currentLayer
+  Checks if the player has won/lost and toggles the respective variable to true if applicable
   outputs how many red/white pegs need to be displayed in an array in the form:
   0: White
   1: Red
@@ -49,10 +83,28 @@ int[] CreateCode()
 */
 int[] CheckGuess()
 {
+  int[] r = new int[2];
   
+  r[0] = checkWhite(); // White
+  r[1] = checkRed();   // Red
   
-  //White
+  // check if we win
+  if(r[1] == 4)
+  {
+    Win = true;
+    // enter end game screen here?
+  }
   
+  currentLayer++; // increment the layer
+  
+  //check if we lose
+  if(currentLayer>13)
+  {
+    Lose = true;
+    // enter end game screen here?
+  }
+  
+  return r;
 }
 
 /*
@@ -62,12 +114,27 @@ int[] CheckGuess()
 int CheckWhite()
 {
   int r = 0;
-  int[] colors = new int[6];
+  int[] codeColors  = new int[6];
+  int[] guessColors = new int[6];
+  
+  //seperate out all the colors in the code and the guess
   for(int i = 0; i<4; i++)
   {
-    colors[Code[i]]++;
+    codeColors[Code[i]]++;
+    guessColors[Guess[currentLayer][i]]++;
   }
   
+  //check guessColors against codeColors
+  for(int i = 0; i<6; i++)
+  {
+    while(codeColors[i]>0 && guessColors[i]>0)
+    {
+      r++;
+      codeColors[i]--;
+      guessColors[i]--;
+    }
+  }
+  return r;
 }
 
 /*
@@ -84,5 +151,6 @@ int CheckRed()
   }
   return r;
 }
+
 
 
